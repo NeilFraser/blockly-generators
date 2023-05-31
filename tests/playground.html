@@ -1,0 +1,95 @@
+<html lang="en">
+    <head>
+      <title>Manual testing playground</title>
+    </head>
+    <body>
+      <h1>Manual testing playground</h1>
+      <textarea id="serialization" style="width: 100%; height: 12em;">
+{
+  "blocks": {
+    "languageVersion": 0,
+    "blocks": [
+      {
+        "type": "controls_repeat_ext",
+        "id": "-]7-bTNM@w]Ub?2s[[Np",
+        "x": 63,
+        "y": 62,
+        "inputs": {
+          "TIMES": {
+            "shadow": {
+              "type": "math_number",
+              "id": "7wi|-KeQU`6=?SlQ1eo0",
+              "fields": {
+                "NUM": 10
+              }
+            },
+            "block": {
+              "type": "math_arithmetic",
+              "id": "5kD/6K+reQ;$yea~_K[/",
+              "fields": {
+                "OP": "ADD"
+              },
+              "inputs": {
+                "A": {
+                  "shadow": {
+                    "type": "math_number",
+                    "id": "i#fSzPW(r2MwW*1lx6|g",
+                    "fields": {
+                      "NUM": 1
+                    }
+                  }
+                },
+                "B": {
+                  "shadow": {
+                    "type": "math_number",
+                    "id": "X@c.(^mq;f%yI3tRBLQh",
+                    "fields": {
+                      "NUM": 1
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "DO": {
+            "block": {
+              "type": "text_print",
+              "id": "/e5VOrV|bS(^VDtH)Z!l",
+              "inputs": {
+                "TEXT": {
+                  "shadow": {
+                    "type": "text",
+                    "id": ".xa/)4w?PIk6@@I5Nn5J",
+                    "fields": {
+                      "TEXT": "abc"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    ]
+  }
+}
+      </textarea>
+      <p><button id="generateButton">Generate</button></p>
+      <textarea id="output" readonly style="width: 100%; height: 12em;"></textarea>
+
+      <script type="module">
+import javascriptGenerator from "../javascript/javascriptGenerator.js";
+import "../javascript/all.js";
+
+function generate() {
+  const json = document.getElementById('serialization').value;
+  console.time('toCode');
+  const code = javascriptGenerator.toCode(json);
+  console.timeEnd('toCode');
+  document.getElementById('output').value = code;
+}
+
+document.getElementById('generateButton').addEventListener('click', generate);
+      </script>
+    </body>
+</html>
