@@ -15,4 +15,4 @@ import './math_number.js';
 import './math_on_list.js';
 import './math_random_float.js';
 import './math_random_int.js';
-import './math_single.js';  // Also defines 'math_round' and 'math_trig';
+import './math_single.js';  // Also defines 'math_round' and 'math_trig'.

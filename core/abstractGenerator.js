@@ -5,6 +5,7 @@
  */
 
 import parseJson from './parseJson.js';
+import parseXml from './parseXml.js';
 
 export default class AbstractGenerator {
   name;
@@ -96,11 +97,11 @@ export default class AbstractGenerator {
   /**
    * Generate code for all blocks in the JSON to this generator's language.
    *
-   * @param json Serialization to generate code from.
+   * @param serialization Serialization to generate code from.
    * @returns Generated code.
    */
-  toCode(json) {
-    const models = parseJson(json);
+  toCode(serialization) {
+    const models = this.deserialize(serialization);
     this.init(models);
     // Cache the scan offset.
     this.scanSin = Math.sin(this.SCAN_ANGLE / 180 * Math.PI);
@@ -119,7 +120,7 @@ export default class AbstractGenerator {
           // This block is a naked value.  Ask the language's code generator if
           // it wants to append a semicolon, or something.
           line = this.scrubNakedValue(line);
-          line = this.addPrefixSuffix(line, block, '');
+          line = this.addPrefixSuffix(line, block);
         }
       }
       const comments = this.commentStack.pop();
@@ -134,6 +135,24 @@ export default class AbstractGenerator {
     return codeString.replace(/^\s+\n/, '')        // Leading blank lines.
                      .replace(/\n\s+$/, '\n')      // Trailing blank lines.
                      .replace(/[ \t]+\n/g, '\n');  // Indented empty lines.
+  }
+
+  /**
+   * Sniff the serialization format to determine if it is JSON or XML.
+   * @param {string|Object} serialization
+   * @returns
+   */
+  deserialize(serialization) {
+    if (typeof serialization === 'string') {
+      if (serialization.trimStart().startsWith('<')) {
+        return parseXml(serialization);
+      }
+      return parseJson(serialization);
+    }
+    if (serialization.firstChild?.tagName === 'xml') {
+      return parseXml(serialization);
+    }
+    return parseJson(serialization);
   }
 
   /**
@@ -180,18 +199,22 @@ export default class AbstractGenerator {
     if (block.comment) {
       this.commentStack[this.commentStack.length - 1].push(block.comment);
     }
+
+    ///////////////////////
     let code = func(block);
+    ///////////////////////
+
     let nextCode = opt_thisOnly ? '' : this.next(block);
     if (Array.isArray(code)) {
       return [code[0] + nextCode, code[1]];
     } else if (typeof code === 'string') {
-      code = this.addPrefixSuffix(code, block, '');
+      code = this.addPrefixSuffix(code, block);
       return code + nextCode;
     } else if (code === null) {
       // Block has handled code generation itself.
       return nextCode;
     }
-    throw SyntaxError('Invalid code generated: ' + code);
+    throw SyntaxError(`Block '${block.type}' generated invalid code: ${code}`);
   }
 
   /**
@@ -312,7 +335,15 @@ export default class AbstractGenerator {
       branch = this.prefixLines(
           this.injectId(this.INFINITE_LOOP_TRAP, block), this.INDENT) + branch;
     }
-    return this.addPrefixSuffix(branch, block, this.INDENT);
+    if (this.STATEMENT_SUFFIX && !this.suppressPrefixSuffix.has(block.type)) {
+      branch = this.prefixLines(
+          this.injectId(this.STATEMENT_SUFFIX, block), this.INDENT) + branch;
+    }
+    if (this.STATEMENT_PREFIX && !this.suppressPrefixSuffix.has(block.type)) {
+      branch = branch + this.prefixLines(
+          this.injectId(this.STATEMENT_PREFIX, block), this.INDENT);
+    }
+    return branch;
   }
 
   /**
@@ -324,9 +355,16 @@ export default class AbstractGenerator {
    * @returns Code snippet with ID.
    */
   injectId(msg, block) {
+    if (!msg.includes('%1')) {
+      return msg;
+    }
+    let id = block.id || '';
+    if (!id) {
+      console.warn('block does not have an ID: ' + block.type);
+    }
     // 'x'.replace(/x/g, `'abc$'`) -> "'abc"
     // See https://github.com/google/blockly/issues/251
-    const id = block.id.replace(/\$/g, '$$$$');
+    id = id.replace(/\$/g, '$$$$');
     return msg.replace(/%1/g, `'${id}'`);
   }
 
@@ -422,15 +460,12 @@ export default class AbstractGenerator {
     return '';
   }
 
-  addPrefixSuffix(code, block, indent) {
+  addPrefixSuffix(code, block) {
     if (this.STATEMENT_PREFIX && !this.suppressPrefixSuffix.has(block.type)) {
-      const
-      code = this.prefixLines(
-          this.injectId(this.STATEMENT_PREFIX, block), indent) + code;
+      code = this.injectId(this.STATEMENT_PREFIX, block) + code;
     }
     if (this.STATEMENT_SUFFIX && !this.suppressPrefixSuffix.has(block.type)) {
-      code = code +
-          this.prefixLines(this.injectId(this.STATEMENT_SUFFIX, block), indent);
+      code = code + this.injectId(this.STATEMENT_SUFFIX, block);
     }
     return code;
   }
@@ -478,8 +513,11 @@ export default class AbstractGenerator {
 
   formatComments(comments) {
     if (!comments || !comments.length) return '';
+    if (!Array.isArray(comments)) {
+      comments = [String(comments)];
+    }
     for (let i = 0; i < comments.length; i++) {
-      comments[i] = this.wrap(comments[i]);
+      comments[i] = this.#wrap(comments[i]);
     }
     return comments.join('\n') + '\n';
   }

@@ -9,7 +9,7 @@ import javascriptGenerator from '../javascriptGenerator.js';
 javascriptGenerator.block['controls_repeat'] = function(block) {
   // Repeat n times.
   let repeats;
-  if (block.fields['TIMES']) {
+  if (block.fields['TIMES'] !== undefined) {
     // Internal number (controls_repeat).
     repeats = Number(block.fields['TIMES']);
   } else {

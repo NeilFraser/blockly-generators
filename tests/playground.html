@@ -1,67 +1,152 @@
+<!DOCTYPE html>
 <html lang="en">
-    <head>
-      <title>Manual testing playground</title>
-    </head>
-    <body>
-      <h1>Manual testing playground</h1>
-      <textarea id="serialization" style="width: 100%; height: 12em;">
+  <head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <title>Generator Playground</title>
+    <style>
+      body {
+        background-color: #fff;
+        font-family: sans-serif;
+      }
+
+      h1 {
+        font-weight: normal;
+        font-size: 140%;
+      }
+
+      textarea {
+        width: 99%;
+        height: 20em;
+      }
+
+      input.param {
+        width: 20em;
+        font-family: monospace;
+      }
+
+      #advanced {
+        padding-left: 1.1em;
+        display: none;
+      }
+      #hideAdvanced {
+        display: none;
+      }
+      #showAdvanced, #hideAdvanced {
+        color: #00c;
+        cursor: default;
+      }
+      #showAdvanced:hover, #hideAdvanced:hover {
+        color: #44f;
+        cursor: default;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Generator Playground</h1>
+
+
+    <table style="width: 100%">
+      <tbody>
+        <tr>
+          <td>Blockly Serialization (JSON or XML)</td>
+          <td>Generated Code</td>
+        </tr>
+        <tr>
+          <td style="width: 50%">
+            <textarea id="serialization" spellcheck="false">
 {
   "blocks": {
     "languageVersion": 0,
     "blocks": [
       {
-        "type": "controls_repeat_ext",
-        "id": "-]7-bTNM@w]Ub?2s[[Np",
-        "x": 63,
-        "y": 62,
+        "type": "controls_if",
+        "id": "g80.fEoPt;:gaGGPt6TJ",
+        "x": 20,
+        "y": 20,
+        "inline": false,
+        "extraState": {
+          "hasElse": true
+        },
         "inputs": {
-          "TIMES": {
-            "shadow": {
-              "type": "math_number",
-              "id": "7wi|-KeQU`6=?SlQ1eo0",
-              "fields": {
-                "NUM": 10
-              }
-            },
+          "IF0": {
             "block": {
-              "type": "math_arithmetic",
-              "id": "5kD/6K+reQ;$yea~_K[/",
+              "type": "logic_compare",
+              "id": "ntb_hXFS3JjzO*wa6s8R",
               "fields": {
-                "OP": "ADD"
+                "OP": "EQ"
               },
               "inputs": {
                 "A": {
-                  "shadow": {
-                    "type": "math_number",
-                    "id": "i#fSzPW(r2MwW*1lx6|g",
+                  "block": {
+                    "type": "math_arithmetic",
+                    "id": "Mm:kn2bOO]PQ1I%d`}}c",
                     "fields": {
-                      "NUM": 1
+                      "OP": "MULTIPLY"
+                    },
+                    "inputs": {
+                      "A": {
+                        "block": {
+                          "type": "math_number",
+                          "id": "JO%3$$3F;-+i:o@1:ZYF",
+                          "fields": {
+                            "NUM": 6
+                          }
+                        }
+                      },
+                      "B": {
+                        "block": {
+                          "type": "math_number",
+                          "id": "W@1aKe4$,!6]ktNWTo_t",
+                          "fields": {
+                            "NUM": 7
+                          }
+                        }
+                      }
                     }
                   }
                 },
                 "B": {
-                  "shadow": {
+                  "block": {
                     "type": "math_number",
-                    "id": "X@c.(^mq;f%yI3tRBLQh",
+                    "id": "j;+4-L1br]Jloz]WGBrJ",
                     "fields": {
-                      "NUM": 1
+                      "NUM": 42
                     }
                   }
                 }
               }
             }
           },
-          "DO": {
+          "DO0": {
             "block": {
               "type": "text_print",
-              "id": "/e5VOrV|bS(^VDtH)Z!l",
+              "id": "_dJbsrk6|#Z$`Wv6$p[g",
+              "inline": false,
               "inputs": {
                 "TEXT": {
-                  "shadow": {
+                  "block": {
                     "type": "text",
-                    "id": ".xa/)4w?PIk6@@I5Nn5J",
+                    "id": "2]a#+F3MMHMNIC?sS7k^",
                     "fields": {
-                      "TEXT": "abc"
+                      "TEXT": "Don't panic"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "ELSE": {
+            "block": {
+              "type": "text_print",
+              "id": "aJBGhxXR,J9(+x$-1Bon",
+              "inline": false,
+              "inputs": {
+                "TEXT": {
+                  "block": {
+                    "type": "text",
+                    "id": "ru1C}d=)YK#7DuB,BMeR",
+                    "fields": {
+                      "TEXT": "Panic"
                     }
                   }
                 }
@@ -73,23 +158,113 @@
     ]
   }
 }
-      </textarea>
-      <p><button id="generateButton">Generate</button></p>
-      <textarea id="output" readonly style="width: 100%; height: 12em;"></textarea>
+            </textarea>
+          </td>
+          <td style="width:50%">
+            <textarea id="code_output" readonly></textarea>
+          </td>
+        </tr>
+      </tbody>
+    </table>
 
-      <script type="module">
+    <p>Language:
+      <select id="language">
+        <option value="javascriptGenerator">JavaScript</option>
+      </select>
+    </p>
+
+    <div id="showAdvanced">➕ Show advanced options</div>
+    <div id="hideAdvanced">➖ Hide advanced options</div>
+    <table id="advanced">
+      <tr>
+        <td>INFINITE_LOOP_TRAP:</td>
+        <td><input id="infiniteLoopTrap" class="param"></td>
+        <td><button class="copy">◀</button> <tt>checkTimeout(%1);\n</tt></td>
+      </tr>
+      <tr>
+        <td>STATEMENT_PREFIX:</td>
+        <td><input id="statementPrefix" class="param"></td>
+        <td><button class="copy">◀</button> <tt>highlight(%1);\n</tt></td>
+      </tr>
+      <tr>
+        <td>STATEMENT_SUFFIX:</td>
+        <td><input id="statementSuffix" class="param"></td>
+        <td><button class="copy">◀</button> <tt>highlight(%1);\n</tt></td>
+      </tr>
+    </table>
+
+    <p>
+      <button id="generateButton">Generate</button>
+      <span id="time"></span>
+    </p>
+
+    <script type="module">
 import javascriptGenerator from "../javascript/javascriptGenerator.js";
 import "../javascript/all.js";
 
-function generate() {
-  const json = document.getElementById('serialization').value;
-  console.time('toCode');
-  const code = javascriptGenerator.toCode(json);
-  console.timeEnd('toCode');
-  document.getElementById('output').value = code;
+function copyParam() {
+  const text = this.nextElementSibling.textContent;
+  const input = this.parentNode.previousElementSibling.firstElementChild;
+  input.value = text;
 }
 
+function readParam(id) {
+  let value = document.getElementById(id).value;
+  // Encode escape sequences into characters.
+  // https://mathiasbynens.be/notes/javascript-escapes
+  value = value.replaceAll('\\b', '\b')
+      .replaceAll('\\f', '\f')
+      .replaceAll('\\n', '\n')
+      .replaceAll('\\r', '\r')
+      .replaceAll('\\t', '\t')
+      .replaceAll('\\v', '\v')
+      .replaceAll('\\0', '\0')
+      // '\xA9' -> '©'
+      .replace(/\\x([0-9a-fA-F]{2})/g,
+          (_, hex) => String.fromCharCode(parseInt(hex, 16)))
+      // '\u2665' -> '♥'
+      .replace(/\\u([0-9a-fA-F]{4})/g,
+          (_, hex) => String.fromCodePoint(parseInt(hex, 16)))
+      // '\u{1D306}' -> '𝌆'
+      .replace(/\\u\{([0-9a-fA-F]{1,})\}/g,
+          (_, hex) => String.fromCodePoint(parseInt(hex, 16)))
+      // ', ", \, and unneeded escapes.
+      .replace(/\\(.)/g, '$1');
+  return value.trim() ? value : null;
+}
+
+function generate() {
+  document.getElementById('code_output').value = '';
+  const json = document.getElementById('serialization').value;
+  let generator = eval(document.getElementById('language').value);
+
+  generator.INFINITE_LOOP_TRAP = readParam('infiniteLoopTrap');
+  generator.STATEMENT_PREFIX = readParam('statementPrefix');
+  generator.STATEMENT_SUFFIX = readParam('statementSuffix');
+
+  const startTime = Date.now();
+  const code = generator.toCode(json);
+  const elapsedTime = Date.now() - startTime;
+  document.getElementById('time').textContent = `(${elapsedTime} ms)`;
+
+  document.getElementById('code_output').value = code;
+}
+
+function displayAdvanced(visible) {
+  document.getElementById('showAdvanced').style.display = visible ? 'none' : 'block';
+  document.getElementById('hideAdvanced').style.display = visible ? 'block' : 'none';
+  document.getElementById('advanced').style.display = visible ? 'block' : 'none';
+}
+displayAdvanced(
+   readParam('infiniteLoopTrap') || readParam('statementPrefix') || readParam('statementSuffix')
+);
+
+for (const button of document.getElementsByClassName('copy')) {
+  button.addEventListener('click', copyParam);
+}
 document.getElementById('generateButton').addEventListener('click', generate);
-      </script>
-    </body>
+document.getElementById('showAdvanced').addEventListener('click', displayAdvanced.bind(null, true));
+document.getElementById('hideAdvanced').addEventListener('click', displayAdvanced.bind(null, false));
+    </script>
+  </body>
 </html>

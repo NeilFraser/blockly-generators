@@ -5,16 +5,29 @@
  */
 
 export default class ModelBlock {
+  /** @type string */
   type;
+  /** @type string|undefined */
   id;
+  /** @type number */
   x = NaN;
+  /** @type number */
   y = NaN;
+  /** @type ModelBlock */
   parent = null;
+  /** @type ModelBlock */
   next = null;
+  /** @type !Object */
   fields = Object.create(null);
+  /** @type !Object */
   inputs = Object.create(null);
+  /** @type any */
   extraState = null;
+  /** @type Object */
+  mutation = null;
+  /** @type boolean */
   enabled = true;
+  /** @type string|undefined */
   comment;
 
   constructor(type, id) {

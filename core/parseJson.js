@@ -26,10 +26,10 @@ export default function parseJson(json) {
       blockModels.push(parseBlock(blockJson, null));
     }
   }
-  return Object.freeze({
-    blocks: Object.freeze(blockModels),
-    variables: Object.freeze(variableModels),
-  });
+  return {
+    blocks: blockModels,
+    variables: variableModels,
+  };
 }
 
 function parseBlock(blockJson, parentBlock) {

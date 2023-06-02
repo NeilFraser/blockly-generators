@@ -4,4 +4,5 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-// import './xxx.js';
+import './variables_get.js';  // Also defines 'variables_get_dynamic'.
+import './variables_set.js';  // Also defines 'variables_set_dynamic'.

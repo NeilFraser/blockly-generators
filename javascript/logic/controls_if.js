@@ -15,6 +15,11 @@ javascriptGenerator.block['controls_if'] = function(block) {
     code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
   }
   const extraState = block.extraState || {};
+  if (block.mutation) {
+    // Convert XML mutation into extraState.
+    extraState['hasElse'] = !!Number(block.mutation.attributes['else']);
+    extraState['elseIfCount'] = Number(block.mutation.attributes['elseif']) || 0;
+  }
   do {
     const conditionCode = javascriptGenerator.valueToCode(block, 'IF' + n,
         javascriptGenerator.order.NONE) || 'false';
@@ -41,6 +46,9 @@ javascriptGenerator.block['controls_if'] = function(block) {
   }
   return code + '\n';
 };
+
+javascriptGenerator.suppressPrefixSuffix.add('controls_ifelse');
+javascriptGenerator.suppressPrefixSuffix.add('controls_if');
 
 javascriptGenerator.block['controls_ifelse'] =
     javascriptGenerator.block['controls_if'];

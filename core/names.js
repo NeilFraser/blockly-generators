@@ -77,7 +77,7 @@ export default class Names {
       return typeDb.get(name);
     }
     const safeName = this.getDistinctName(name, kind);
-    typeDb.set(normalizedName, safeName);
+    typeDb.set(name, safeName);
     return safeName;
   }
 

@@ -11,7 +11,7 @@ javascriptGenerator.block['math_change'] = function(block) {
   const argument0 = javascriptGenerator.valueToCode(block, 'DELTA',
       javascriptGenerator.order.ADDITION) || '0';
   const varName = javascriptGenerator.nameDB.getName(
-      block.fields['VAR'], NameType.VARIABLE);
+      block.fields['VAR'], 'VARIABLE');
   return varName + ' = (typeof ' + varName + ' === \'number\' ? ' + varName +
       ' : 0) + ' + argument0 + ';\n';
 };

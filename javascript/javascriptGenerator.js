@@ -152,10 +152,10 @@ javascriptGenerator.formatComments = function(comments) {
 javascriptGenerator.quote = function(string) {
   // Can't use JSON.stringify since Google's style guide recommends
   // JS string literals use single quotes.
-  string = string.replace(/\\/g, '\\\\')
-               .replace(/\n/g, '\\\n')
-               .replace(/'/g, '\\\'');
-  return '\'' + string + '\'';
+  string = string.replaceAll('\\', '\\\\')
+               .replaceAll('\n', '\\\n')
+               .replaceAll("'", "\\'");
+  return `'${string}'`;
 };
 
 /**
@@ -168,7 +168,7 @@ javascriptGenerator.quote = function(string) {
 javascriptGenerator.multiline_quote = function(string) {
   // Can't use JSON.stringify since Google's style guide recommends
   // JS string literals use single quotes.
-  const lines = string.split(/\n/g).map(this.quote_);
+  const lines = string.split(/\n/g).map(this.quote);
   return lines.join(' + \'\\n\' +\n');
 };
 
@@ -205,7 +205,7 @@ javascriptGenerator.getAdjusted = function(
 
   let at = this.valueToCode(block, atId, outerOrder) || defaultAtIndex;
 
-  if (stringUtils.isNumber(at)) {
+  if (/^\s*-?\d+(\.\d+)?\s*$/.test(at)) {
     // If the index is a naked number, adjust it right now.
     at = Number(at) + delta;
     if (opt_negate) {
@@ -214,21 +214,17 @@ javascriptGenerator.getAdjusted = function(
   } else {
     // If the index is dynamic, adjust it in code.
     if (delta > 0) {
-      at = at + ' + ' + delta;
+      at += ' + ' + delta;
     } else if (delta < 0) {
-      at = at + ' - ' + -delta;
+      at += ' - ' + -delta;
     }
     if (opt_negate) {
-      if (delta) {
-        at = '-(' + at + ')';
-      } else {
-        at = '-' + at;
-      }
+      at = delta ? `-(${at})` : '-' + at;
     }
     innerOrder = Math.floor(innerOrder);
     order = Math.floor(order);
     if (innerOrder && order >= innerOrder) {
-      at = '(' + at + ')';
+      at = `(${at})`;
     }
   }
   return at;
