@@ -88,8 +88,8 @@ export default class Names {
    * ensure name doesn't collide.
    *
    * @param name The Blockly entity name (no constraints).
-   * @param kind The type of entity in Blockly ('VARIABLE', 'PROCEDURE',
-   *     'DEVELOPER_VARIABLE', etc...).
+   * @param kind The kind of the name ('VARIABLE', 'PROCEDURE',
+   *     'DEVELOPER_VARIABLE', 'DEVELOPER_PROCEDURE', etc...).
    * @returns An entity name that is legal in the exported language.
    */
   getDistinctName(name, kind) {

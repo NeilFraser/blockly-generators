@@ -88,7 +88,7 @@ export default class AbstractGenerator {
    */
   FUNCTION_NAME_PLACEHOLDER = '{leCUI8hutHZI4480Dc}';
   #FUNCTION_NAME_PLACEHOLDER_REGEXP = new RegExp(
-        this.FUNCTION_NAME_PLACEHOLDER_, 'g');
+        this.FUNCTION_NAME_PLACEHOLDER, 'g');
 
   constructor(name) {
     this.name = name;
@@ -399,14 +399,14 @@ export default class AbstractGenerator {
    *     desiredName if the former has already been taken by the user.
    */
   provideFunction(desiredName, code) {
-    functionName =
-        this.nameDB.getName(desiredName, this.NameKind.DEVELOPER_PROCEDURE);
+    const functionName =
+        this.nameDB.getName(desiredName, 'DEVELOPER_PROCEDURE');
     if (!this.definitions[functionName]) {
       if (Array.isArray(code)) {
         code = code.join('\n');
       }
       let codeText = code.trim().replace(
-          this.FUNCTION_NAME_PLACEHOLDER_REGEXP, functionName);
+          this.#FUNCTION_NAME_PLACEHOLDER_REGEXP, functionName);
       // Change all '  ' indents into the desired indent.
       // To avoid an infinite loop of replacements, change all indents to '\0'
       // character first, then replace them all with the indent.

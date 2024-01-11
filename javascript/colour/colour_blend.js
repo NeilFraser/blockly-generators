@@ -14,8 +14,8 @@ javascriptGenerator.block['colour_blend'] = function(block) {
       javascriptGenerator.order.NONE) || "'#000000'";
   const ratio = javascriptGenerator.valueToCode(block, 'RATIO',
       javascriptGenerator.order.NONE) || 0.5;
-  const functionName = javascriptGenerator.provideFunction_('colourBlend', `
-function ${javascriptGenerator.FUNCTION_NAME_PLACEHOLDER_}(c1, c2, ratio) {
+  const functionName = javascriptGenerator.provideFunction('colourBlend', `
+function ${javascriptGenerator.FUNCTION_NAME_PLACEHOLDER}(c1, c2, ratio) {
   ratio = Math.max(Math.min(Number(ratio), 1), 0);
   var r1 = parseInt(c1.substring(1, 3), 16);
   var g1 = parseInt(c1.substring(3, 5), 16);

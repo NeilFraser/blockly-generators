@@ -14,7 +14,7 @@ javascriptGenerator.block['colour_rgb'] = function(block) {
   const blue =
       javascriptGenerator.valueToCode(block, 'BLUE', javascriptGenerator.order.NONE) || 0;
   const functionName = javascriptGenerator.provideFunction('colourRgb', `
-function ${javascriptGenerator.FUNCTION_NAME_PLACEHOLDER_}(r, g, b) {
+function ${javascriptGenerator.FUNCTION_NAME_PLACEHOLDER}(r, g, b) {
   r = Math.max(Math.min(Number(r), 100), 0) * 2.55;
   g = Math.max(Math.min(Number(g), 100), 0) * 2.55;
   b = Math.max(Math.min(Number(b), 100), 0) * 2.55;

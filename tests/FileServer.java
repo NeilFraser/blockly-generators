@@ -6,7 +6,7 @@
 // Minor modifications for Blockly.
 
 // Compile with:  javac FileServer.java
-// Run with: java FileServer 8001 ./
+// Run with: java FileServer 8001 ../
 // Go to: http://localhost:8001/
 
 import java.net.*;

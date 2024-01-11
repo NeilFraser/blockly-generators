@@ -28,7 +28,7 @@ javascriptGenerator.block['math_number_property'] = function(block) {
   let code;
   if (dropdownProperty === 'PRIME') {
     // Prime is a special case as it is not a one-liner test.
-    const functionName = javascriptGenerator.provideFunction_('mathIsPrime', `
+    const functionName = javascriptGenerator.provideFunction('mathIsPrime', `
 function ${javascriptGenerator.FUNCTION_NAME_PLACEHOLDER}(n) {
   // https://en.wikipedia.org/wiki/Primality_test#Naive_methods
   if (n == 2 || n == 3) {

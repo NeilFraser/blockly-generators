@@ -29,7 +29,7 @@ javascriptGenerator.block['math_on_list'] = function(block) {
       break;
     case 'AVERAGE': {
       // mathMean([null,null,1,3]) === 2.0.
-      const functionName = javascriptGenerator.provideFunction_('mathMean', `
+      const functionName = javascriptGenerator.provideFunction('mathMean', `
 function ${javascriptGenerator.FUNCTION_NAME_PLACEHOLDER}(myList) {
   return myList.reduce(function(x, y) {return x + y;}, 0) / myList.length;
 }
@@ -41,7 +41,7 @@ function ${javascriptGenerator.FUNCTION_NAME_PLACEHOLDER}(myList) {
     }
     case 'MEDIAN': {
       // mathMedian([null,null,1,3]) === 2.0.
-      const functionName = javascriptGenerator.provideFunction_('mathMedian', `
+      const functionName = javascriptGenerator.provideFunction('mathMedian', `
 function ${javascriptGenerator.FUNCTION_NAME_PLACEHOLDER}(myList) {
   var localList = myList.filter(function (x) {return typeof x === 'number';});
   if (!localList.length) return null;
@@ -62,7 +62,7 @@ function ${javascriptGenerator.FUNCTION_NAME_PLACEHOLDER}(myList) {
       // As a list of numbers can contain more than one mode,
       // the returned result is provided as an array.
       // Mode of [3, 'x', 'x', 1, 1, 2, '3'] -> ['x', 1].
-      const functionName = javascriptGenerator.provideFunction_('mathModes', `
+      const functionName = javascriptGenerator.provideFunction('mathModes', `
 function ${javascriptGenerator.FUNCTION_NAME_PLACEHOLDER}(values) {
   var modes = [];
   var counts = [];
@@ -98,7 +98,7 @@ function ${javascriptGenerator.FUNCTION_NAME_PLACEHOLDER}(values) {
       break;
     }
     case 'STD_DEV': {
-      const functionName = javascriptGenerator.provideFunction_('mathStandardDeviation', `
+      const functionName = javascriptGenerator.provideFunction('mathStandardDeviation', `
 function ${javascriptGenerator.FUNCTION_NAME_PLACEHOLDER}(numbers) {
   var n = numbers.length;
   if (!n) return null;
@@ -117,7 +117,7 @@ function ${javascriptGenerator.FUNCTION_NAME_PLACEHOLDER}(numbers) {
       break;
     }
     case 'RANDOM': {
-      const functionName = javascriptGenerator.provideFunction_('mathRandomList', `
+      const functionName = javascriptGenerator.provideFunction('mathRandomList', `
 function ${javascriptGenerator.FUNCTION_NAME_PLACEHOLDER}(list) {
   var x = Math.floor(Math.random() * list.length);
   return list[x];

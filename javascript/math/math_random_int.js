@@ -12,7 +12,7 @@ javascriptGenerator.block['math_random_int'] = function(block) {
       javascriptGenerator.order.NONE) || '0';
   const argument1 = javascriptGenerator.valueToCode(block, 'TO',
       javascriptGenerator.order.NONE) || '0';
-  const functionName = javascriptGenerator.provideFunction_('mathRandomInt', `
+  const functionName = javascriptGenerator.provideFunction('mathRandomInt', `
 function ${javascriptGenerator.FUNCTION_NAME_PLACEHOLDER}(a, b) {
   if (a > b) {
     // Swap a and b to ensure a is smaller.

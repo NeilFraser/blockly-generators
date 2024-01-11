@@ -8,7 +8,7 @@ import javascriptGenerator from '../javascriptGenerator.js';
 
 javascriptGenerator.block['colour_random'] = function(block) {
   // Generate a random colour.
-  const functionName = JavaScript.provideFunction_('colourRandom', `
+  const functionName = javascriptGenerator.provideFunction('colourRandom', `
 function ${javascriptGenerator.FUNCTION_NAME_PLACEHOLDER}() {
   var num = Math.floor(Math.random() * Math.pow(2, 24));
   return '#' + ('00000' + num.toString(16)).substr(-6);
