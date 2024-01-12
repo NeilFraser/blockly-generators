@@ -23,7 +23,7 @@ export default function parseJson(json) {
   const blockModels = [];
   if (json['blocks']) {
     for (const blockJson of json['blocks']['blocks']) {
-      blockModels.push(parseBlock(blockJson, null));
+      blockModels.push(parseBlock(blockJson, null, variableModels));
     }
   }
   return {
@@ -32,7 +32,7 @@ export default function parseJson(json) {
   };
 }
 
-function parseBlock(blockJson, parentBlock) {
+function parseBlock(blockJson, parentBlock, variableModels) {
   const blockModel = new ModelBlock(blockJson['type'], blockJson['id']);
   blockModel.parent = parentBlock;
   if (blockJson['x'] !== undefined) {
@@ -50,12 +50,17 @@ function parseBlock(blockJson, parentBlock) {
   const next = blockJson['next'];
   if (next !== undefined) {
     blockModel.next =
-        parseBlock(next['block'] || next['shadow'], blockModel);
+        parseBlock(next['block'] || next['shadow'], blockModel, variableModels);
   }
   const fields = blockJson['fields'];
   if (fields !== undefined) {
     for (const name in fields) {
-      blockModel.fields[name] = String(fields[name]);
+      let value = fields[name];
+      // A field made up of an object with just an ID is a variable reference.
+      if (value && value['id']) {
+        value = variableModels[value['id']].name;
+      }
+      blockModel.fields[name] = String(value);
     }
   }
   const inputs = blockJson['inputs'];
@@ -63,7 +68,8 @@ function parseBlock(blockJson, parentBlock) {
     for (const name in inputs) {
       const value = inputs[name];
       blockModel.inputs[name] =
-          parseBlock(value['block'] || value['shadow'], blockModel);
+          parseBlock(value['block'] || value['shadow'],
+                     blockModel, variableModels);
     }
   }
   const extraState = blockJson['extraState'];

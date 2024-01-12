@@ -88,7 +88,7 @@ export default class AbstractGenerator {
    */
   FUNCTION_NAME_PLACEHOLDER = '{leCUI8hutHZI4480Dc}';
   #FUNCTION_NAME_PLACEHOLDER_REGEXP = new RegExp(
-        this.FUNCTION_NAME_PLACEHOLDER, 'g');
+      this.FUNCTION_NAME_PLACEHOLDER, 'g');
 
   constructor(name) {
     this.name = name;

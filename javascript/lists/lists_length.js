@@ -6,7 +6,7 @@
 
 import javascriptGenerator from '../javascriptGenerator.js';
 
-javascriptGenerator.block['lists'] = function(block) {
+javascriptGenerator.block['lists_length'] = function(block) {
   // String or array length.
   const list = javascriptGenerator.valueToCode(block, 'VALUE',
       javascriptGenerator.order.MEMBER) || '[]';

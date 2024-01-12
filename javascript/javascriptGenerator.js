@@ -85,6 +85,25 @@ javascriptGenerator.oneBasedIndex = true;
  */
 javascriptGenerator.isInitialized = false;
 
+// List of illegal variable names.  This is not intended to be a
+// security feature.  Blockly is 100% client-side, so bypassing
+// this list is trivial.  This is intended to prevent users from
+// accidentally clobbering a built-in object or function.
+//
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Lexical_grammar#reserved_words
+javascriptGenerator.addReservedWords(
+  'break,case,catch,class,const,continue,debugger,default,delete,do,else,' +
+  'export,extends,false,finally,for,function,if,import,in,instanceof,new,' +
+  'null,return,super,switch,this,throw,true,try,typeof,var,void,while,with,' +
+  'let,static,yeild,' +
+  'await,' +
+  'implements,interface,package,private,protected,public,' +
+  'arguments,as,async,eval,from,get,of,set,' +
+  // Everything in the current environment
+  // (835 items in Chrome, 104 in Node).
+  Object.getOwnPropertyNames(globalThis).join(','),
+);
+
 /**
  * Initialise the database of variable names.
  * @param models Data structure to generate code from.

@@ -6,7 +6,7 @@
 
 import javascriptGenerator from '../javascriptGenerator.js';
 
-javascriptGenerator.block['lists_length'] = function(block) {
+javascriptGenerator.block['lists_repeat'] = function(block) {
   // Create a list with one element repeated.
   const functionName = javascriptGenerator.provideFunction('listsRepeat', `
 function ${javascriptGenerator.FUNCTION_NAME_PLACEHOLDER}(value, n) {

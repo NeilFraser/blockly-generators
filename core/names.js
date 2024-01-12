@@ -19,7 +19,7 @@ export default class Names {
   #kinds = new Map();
 
   /**
-   * A map from kind (e.g. name, procedure) to maps from names to generated
+   * A map from kind (e.g. 'VARIABLE', 'PROCEDURE') to maps from names to generated
    * names.
    */
   #db = new Map();
@@ -45,6 +45,7 @@ export default class Names {
   }
 
   addKind(name, opt_prefix) {
+    if (this.#kinds.has(name)) throw Error('Existing kind: ' + kind);
     this.#kinds.set(name, opt_prefix || '');
     this.#db.set(name, new Map());
   }
@@ -57,9 +58,9 @@ export default class Names {
    * @returns A list of names.
    */
   getGeneratedNames(kind) {
-    if (!this.#kinds.has(kind)) throw Error('Unknown kind: ' + kind);
-    const names = this.#db.get(kind)?.keys();
-    return Array.from(names || []);
+    const typeDb = this.#db.get(kind);
+    if (!typeDb) throw Error('Unknown kind: ' + kind);
+    return Array.from(typeDb.keys());
   }
 
   /**
