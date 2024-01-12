@@ -135,7 +135,7 @@ public class FileServer {
   private static String guessContentType(String path) {
     if (path.endsWith(".html") || path.endsWith(".htm"))
       return "text/html";
-    if (path.endsWith(".js"))
+    if (path.endsWith(".js") || path.endsWith(".mjs"))
       return "text/javascript";
     if (path.endsWith(".json"))
       return "application/json";
