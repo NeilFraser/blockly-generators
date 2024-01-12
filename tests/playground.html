@@ -59,71 +59,71 @@
     "languageVersion": 0,
     "blocks": [
       {
-        "type": "controls_if",
-        "id": "g80.fEoPt;:gaGGPt6TJ",
-        "x": 20,
-        "y": 20,
-        "inline": false,
-        "extraState": {
-          "hasElse": true
+        "type": "variables_set",
+        "id": "U#0.UW?O.t8TDLCTtM~3",
+        "x": 37,
+        "y": -12,
+        "fields": {
+          "VAR": {
+            "id": "U9_b~z:[LR,nj9Il+?j0"
+          }
         },
         "inputs": {
-          "IF0": {
+          "VALUE": {
             "block": {
-              "type": "logic_compare",
-              "id": "ntb_hXFS3JjzO*wa6s8R",
-              "fields": {
-                "OP": "EQ"
-              },
+              "type": "logic_ternary",
+              "id": "|G%U;LQ:FS_oQyD$vYtT",
               "inputs": {
-                "A": {
+                "IF": {
                   "block": {
-                    "type": "math_arithmetic",
-                    "id": "Mm:kn2bOO]PQ1I%d`}}c",
+                    "type": "logic_compare",
+                    "id": "ntb_hXFS3JjzO*wa6s8R",
                     "fields": {
-                      "OP": "MULTIPLY"
+                      "OP": "EQ"
                     },
                     "inputs": {
                       "A": {
                         "block": {
-                          "type": "math_number",
-                          "id": "JO%3$$3F;-+i:o@1:ZYF",
+                          "type": "math_arithmetic",
+                          "id": "Mm:kn2bOO]PQ1I%d`}}c",
                           "fields": {
-                            "NUM": 6
+                            "OP": "MULTIPLY"
+                          },
+                          "inputs": {
+                            "A": {
+                              "block": {
+                                "type": "math_number",
+                                "id": "JO%3$$3F;-+i:o@1:ZYF",
+                                "fields": {
+                                  "NUM": 6
+                                }
+                              }
+                            },
+                            "B": {
+                              "block": {
+                                "type": "math_number",
+                                "id": "W@1aKe4$,!6]ktNWTo_t",
+                                "fields": {
+                                  "NUM": 7
+                                }
+                              }
+                            }
                           }
                         }
                       },
                       "B": {
                         "block": {
                           "type": "math_number",
-                          "id": "W@1aKe4$,!6]ktNWTo_t",
+                          "id": "j;+4-L1br]Jloz]WGBrJ",
                           "fields": {
-                            "NUM": 7
+                            "NUM": 42
                           }
                         }
                       }
                     }
                   }
                 },
-                "B": {
-                  "block": {
-                    "type": "math_number",
-                    "id": "j;+4-L1br]Jloz]WGBrJ",
-                    "fields": {
-                      "NUM": 42
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "DO0": {
-            "block": {
-              "type": "text_print",
-              "id": "_dJbsrk6|#Z$`Wv6$p[g",
-              "inline": false,
-              "inputs": {
-                "TEXT": {
+                "THEN": {
                   "block": {
                     "type": "text",
                     "id": "2]a#+F3MMHMNIC?sS7k^",
@@ -131,17 +131,8 @@
                       "TEXT": "Don't panic"
                     }
                   }
-                }
-              }
-            }
-          },
-          "ELSE": {
-            "block": {
-              "type": "text_print",
-              "id": "aJBGhxXR,J9(+x$-1Bon",
-              "inline": false,
-              "inputs": {
-                "TEXT": {
+                },
+                "ELSE": {
                   "block": {
                     "type": "text",
                     "id": "ru1C}d=)YK#7DuB,BMeR",
@@ -153,10 +144,118 @@
               }
             }
           }
+        },
+        "next": {
+          "block": {
+            "type": "text_print",
+            "id": "ua7E5DdHNA9$o#hrDeb^",
+            "enabled": false,
+            "icons": {
+              "comment": {
+                "text": "Disabled.",
+                "pinned": false,
+                "height": 80,
+                "width": 160
+              }
+            },
+            "inputs": {
+              "TEXT": {
+                "shadow": {
+                  "type": "text",
+                  "id": "eHU`O`N,!4HXQm|rnV|K",
+                  "fields": {
+                    "TEXT": "abc"
+                  }
+                }
+              }
+            },
+            "next": {
+              "block": {
+                "type": "procedures_callnoreturn",
+                "id": "f`5,i2yhZa;U8;+hp:-(",
+                "extraState": {
+                  "name": "printFunc",
+                  "params": [
+                    "x"
+                  ]
+                },
+                "inputs": {
+                  "ARG0": {
+                    "block": {
+                      "type": "variables_get",
+                      "id": "fJ?j{?T]@W_i8`S).3De",
+                      "fields": {
+                        "VAR": {
+                          "id": "U9_b~z:[LR,nj9Il+?j0"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "type": "procedures_defnoreturn",
+        "id": "ZT0|Co|A@GCln$PTquG$",
+        "x": 37,
+        "y": 213,
+        "extraState": {
+          "params": [
+            {
+              "name": "x",
+              "id": "9v^Xp@u/,%kLoqn:hBlD"
+            }
+          ]
+        },
+        "icons": {
+          "comment": {
+            "text": "This is a function.",
+            "pinned": false,
+            "height": 80,
+            "width": 160
+          }
+        },
+        "fields": {
+          "NAME": "printFunc"
+        },
+        "inputs": {
+          "STACK": {
+            "block": {
+              "type": "text_print",
+              "id": "_dJbsrk6|#Z$`Wv6$p[g",
+              "inline": false,
+              "inputs": {
+                "TEXT": {
+                  "block": {
+                    "type": "variables_get",
+                    "id": "Va5%yvELV#N9Mub[^SCO",
+                    "fields": {
+                      "VAR": {
+                        "id": "9v^Xp@u/,%kLoqn:hBlD"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
         }
       }
     ]
-  }
+  },
+  "variables": [
+    {
+      "name": "text",
+      "id": "U9_b~z:[LR,nj9Il+?j0"
+    },
+    {
+      "name": "x",
+      "id": "9v^Xp@u/,%kLoqn:hBlD"
+    }
+  ]
 }
             </textarea>
           </td>

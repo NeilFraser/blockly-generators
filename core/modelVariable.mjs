@@ -5,10 +5,8 @@
  */
 
 export default class ModelVariable {
-  name;
-  type;
-
   constructor(name, type) {
+    /** @type string */
     this.name = name;
     this.type = type;
   }

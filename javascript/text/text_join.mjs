@@ -26,9 +26,9 @@ javascriptGenerator.block['text_join'] = function(block) {
       return [`String(${element})`, javascriptGenerator.order.FUNCTION_CALL];
     }
     case 2: {
-      const element0 = javascriptGenerator.valueToCode(block, 'ADD0',
+      let element0 = javascriptGenerator.valueToCode(block, 'ADD0',
           javascriptGenerator.order.NONE) || "''";
-      const element1 = javascriptGenerator.valueToCode(block, 'ADD1',
+      let element1 = javascriptGenerator.valueToCode(block, 'ADD1',
           javascriptGenerator.order.NONE) || "''";
       if (!strRegExp.test(element0)) {
         element0 = `String(${element0})`;

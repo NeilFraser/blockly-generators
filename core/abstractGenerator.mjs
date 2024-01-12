@@ -7,91 +7,92 @@
 import parseJson from './parseJson.mjs';
 import parseXml from './parseXml.mjs';
 
+let scanSin_ = 0;
+
 export default class AbstractGenerator {
-  name;
-
-  /**
-   * Arbitrary code to inject into locations that risk causing infinite loops.
-   * Any instances of '%1' will be replaced by the block ID that failed.
-   * E.g. `  checkTimeout(%1);\n`
-   */
-  INFINITE_LOOP_TRAP = null;
-
-  /**
-   * Arbitrary code to inject before every statement.
-   * Any instances of '%1' will be replaced by the block ID of the statement.
-   * E.g. `highlight(%1);\n`
-   */
-  STATEMENT_PREFIX = null;
-
-  /**
-   * Arbitrary code to inject after every statement.
-   * Any instances of '%1' will be replaced by the block ID of the statement.
-   * E.g. `highlight(%1);\n`
-   */
-  STATEMENT_SUFFIX = null;
-
-  /** Set of block types which don't want statement prefixes or suffixes. */
-  suppressPrefixSuffix = new Set();
-
-  /**
-   * The method of indenting.  Defaults to two spaces, but language generators
-   * may override this to increase indent or change to tabs.
-   */
-  INDENT = '  ';
-
-  /**
-   * Maximum length for a comment before wrapping.  Does not account for
-   * indenting level.
-   */
-  COMMENT_WRAP = 60;
-
-  /** List of outer-inner pairings that do NOT require parentheses. */
-  ORDER_OVERRIDES = [];
-
-  /** Comma-separated list of reserved words. */
-  RESERVED_WORDS = '';
-
-  block = Object.create(null);
-  order = Object.create(null);
-
-  /**
-   * Whether the init method has been called.
-   * Generators that set this flag to false after creation and true in init
-   * will cause blockToCode to emit a warning if the generator has not been
-   * initialized. If this flag is untouched, it will have no effect.
-   */
-  isInitialized = null;
-
-  /** A dictionary of definitions to be printed before the code. */
-  definitions = null;
-
-  /** A database of variable and procedure names. */
-  nameDB = null;
-
-  /**
-   * Angle away from the horizontal to sweep for blocks.  Order of execution is
-   * generally top to bottom, but a small angle changes the scan to give a bit
-   * of a left to right bias (reversed in RTL).  Units are in degrees. See:
-   * https://tvtropes.org/pmwiki/pmwiki.php/Main/DiagonalBilling
-   */
-  SCAN_ANGLE = 3;
-  #scanSin
-
-  commentStack = null;
-
-  /**
-   * This is used as a placeholder in functions defined using
-   * AbstractGenerator.provideFunction.  It must not be legal code that could
-   * legitimately appear in a developer-provided function definition
-   * (or comment), and it must not confuse the regular expression parser.
-   */
-  FUNCTION_NAME_PLACEHOLDER = '{leCUI8hutHZI4480Dc}';
-  #FUNCTION_NAME_PLACEHOLDER_REGEXP = new RegExp(
-      this.FUNCTION_NAME_PLACEHOLDER, 'g');
-
   constructor(name) {
     this.name = name;
+
+    /**
+     * Arbitrary code to inject into locations that risk causing infinite loops.
+     * Any instances of '%1' will be replaced by the block ID that failed.
+     * E.g. `  checkTimeout(%1);\n`
+     */
+    this.INFINITE_LOOP_TRAP = null;
+
+    /**
+     * Arbitrary code to inject before every statement.
+     * Any instances of '%1' will be replaced by the block ID of the statement.
+     * E.g. `highlight(%1);\n`
+     */
+    this.STATEMENT_PREFIX = null;
+
+    /**
+     * Arbitrary code to inject after every statement.
+     * Any instances of '%1' will be replaced by the block ID of the statement.
+     * E.g. `highlight(%1);\n`
+     */
+    this.STATEMENT_SUFFIX = null;
+
+    /** Set of block types which don't want statement prefixes or suffixes. */
+    this.suppressPrefixSuffix = new Set();
+
+    /**
+     * The method of indenting.  Defaults to two spaces, but language generators
+     * may override this to increase indent or change to tabs.
+     */
+    this.INDENT = '  ';
+
+    /**
+     * Maximum length for a comment before wrapping.  Does not account for
+     * indenting level.
+     */
+    this.COMMENT_WRAP = 60;
+
+    /** List of outer-inner pairings that do NOT require parentheses. */
+    this.ORDER_OVERRIDES = [];
+
+    /** Comma-separated list of reserved words. */
+    this.RESERVED_WORDS = '';
+
+    this.block = Object.create(null);
+    this.order = Object.create(null);
+
+    /**
+     * Whether the init method has been called.
+     * Generators that set this flag to false after creation and true in init
+     * will cause blockToCode to emit a warning if the generator has not been
+     * initialized. If this flag is untouched, it will have no effect.
+     */
+    this.isInitialized = null;
+
+    /** A dictionary of definitions to be printed before the code. */
+    this.definitions = null;
+
+    /** A database of variable and procedure names. */
+    this.nameDB = null;
+
+    /**
+     * Angle away from the horizontal to sweep for blocks.  Order of execution is
+     * generally top to bottom, but a small angle changes the scan to give a bit
+     * of a left to right bias (reversed in RTL).  Units are in degrees. See:
+     * https://tvtropes.org/pmwiki/pmwiki.php/Main/DiagonalBilling
+     */
+    this.SCAN_ANGLE = 3;
+    // Cache the scan offset.
+    scanSin_ = Math.sin(this.SCAN_ANGLE / 180 * Math.PI);
+
+    this.commentStack = null;
+
+    /**
+     * This is used as a placeholder in functions defined using
+     * AbstractGenerator.provideFunction.  It must not be legal code that could
+     * legitimately appear in a developer-provided function definition
+     * (or comment), and it must not confuse the regular expression parser.
+     */
+    this.FUNCTION_NAME_PLACEHOLDER = '{leCUI8hutHZI4480Dc}';
+    this.FUNCTION_NAME_PLACEHOLDER_REGEXP_ = new RegExp(
+        this.FUNCTION_NAME_PLACEHOLDER, 'g');
   }
 
   /**
@@ -103,9 +104,7 @@ export default class AbstractGenerator {
   toCode(serialization) {
     const models = this.deserialize(serialization);
     this.init(models);
-    // Cache the scan offset.
-    this.scanSin = Math.sin(this.SCAN_ANGLE / 180 * Math.PI);
-    models.blocks.sort(this.sortBlockFunc);
+    models.blocks.sort(this.sortBlockFunc_);
 
     const code = [];
     // Iterate through the top blocks.
@@ -406,7 +405,7 @@ export default class AbstractGenerator {
         code = code.join('\n');
       }
       let codeText = code.trim().replace(
-          this.#FUNCTION_NAME_PLACEHOLDER_REGEXP, functionName);
+          this.FUNCTION_NAME_PLACEHOLDER_REGEXP_, functionName);
       // Change all '  ' indents into the desired indent.
       // To avoid an infinite loop of replacements, change all indents to '\0'
       // character first, then replace them all with the indent.
@@ -507,8 +506,8 @@ export default class AbstractGenerator {
    * @returns The comparison value.
    *     This tells Array.sort() how to change object a's index.
    */
-  #sortBlockFunc(a, b) {
-    return a.y + this.scanSin * a.x - (b.y + this.scanSin * b.x);
+  sortBlockFunc_(a, b) {
+    return a.y + scanSin_ * a.x - (b.y + scanSin_ * b.x);
   }
 
   formatComments(comments) {
@@ -517,12 +516,12 @@ export default class AbstractGenerator {
       comments = [String(comments)];
     }
     for (let i = 0; i < comments.length; i++) {
-      comments[i] = this.#wrap(comments[i]);
+      comments[i] = this.wrap_(comments[i]);
     }
     return comments.join('\n') + '\n';
   }
 
-  #wrap(text, maxLength) {
+  wrap_(text, maxLength) {
     const words = text.split(' ');
     let currentLineLength = 0;
     let wrappedText = '';

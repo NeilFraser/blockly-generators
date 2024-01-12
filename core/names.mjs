@@ -13,41 +13,36 @@
  * Class for a database of entity names (variables, procedures, etc).
  */
 export default class Names {
-  /** A set of reserved words. */
-  #reservedWords;
-
-  #kinds = new Map();
-
-  /**
-   * A map from kind (e.g. 'VARIABLE', 'PROCEDURE') to maps from names to generated
-   * names.
-   */
-  #db = new Map();
-
-  /** A set of used names to avoid collisions. */
-  #dbReverse = new Set();
-
-  /**
-   * The variable map from the serialization, containing variable types.
-   */
-  #variableMap = null;
-
   /**
    * @param reservedWordsList A comma-separated string of words that are illegal
    *     for use as names in a language (e.g. 'new,if,this,...').
    * @param map A map of ID -> variable models.
    */
   constructor(reservedWordsList, map) {
-    this.#reservedWords = new Set(
+    this.reservedWords_ = new Set(
       reservedWordsList ? reservedWordsList.split(',') : []
     );
-    this.#variableMap = map;
+    /**
+     * The variable map from the serialization, containing variable types.
+     */
+    this.variableMap_ = map;
+
+    this.kinds_ = new Map();
+
+    /**
+     * A map from kind (e.g. 'VARIABLE', 'PROCEDURE') to maps from names to
+     * generated names.
+     */
+    this.db_ = new Map();
+
+    /** A set of used names to avoid collisions. */
+    this.dbReverse_ = new Set();
   }
 
   addKind(name, opt_prefix) {
-    if (this.#kinds.has(name)) throw Error('Existing kind: ' + kind);
-    this.#kinds.set(name, opt_prefix || '');
-    this.#db.set(name, new Map());
+    if (this.kinds_.has(name)) throw Error('Existing kind: ' + kind);
+    this.kinds_.set(name, opt_prefix || '');
+    this.db_.set(name, new Map());
   }
 
   /**
@@ -58,7 +53,7 @@ export default class Names {
    * @returns A list of names.
    */
   getGeneratedNames(kind) {
-    const typeDb = this.#db.get(kind);
+    const typeDb = this.db_.get(kind);
     if (!typeDb) throw Error('Unknown kind: ' + kind);
     return Array.from(typeDb.keys());
   }
@@ -72,7 +67,7 @@ export default class Names {
    * @returns An entity name that is legal in the exported language.
    */
   getName(name, kind) {
-    const typeDb = this.#db.get(kind);
+    const typeDb = this.db_.get(kind);
     if (!typeDb) throw Error('Unknown kind: ' + kind);
     if (typeDb.has(name)) {
       return typeDb.get(name);
@@ -94,18 +89,18 @@ export default class Names {
    * @returns An entity name that is legal in the exported language.
    */
   getDistinctName(name, kind) {
-    if (!this.#kinds.has(kind)) throw Error('Unknown kind: ' + kind);
-    const prefix = this.#kinds.get(kind);
-    let safeName = this.#safeName(name);
+    if (!this.kinds_.has(kind)) throw Error('Unknown kind: ' + kind);
+    const prefix = this.kinds_.get(kind);
+    let safeName = this.safeName_(name);
     let i = null;
     let proposedName;
     // Keep looking until there's no collision with an existing name.
     do {
       proposedName = prefix + safeName + (i ?? '');
       i = i ? i + 1 : 2;
-    } while (this.#dbReverse.has(proposedName) ||
-        this.#reservedWords.has(proposedName));
-    this.#dbReverse.add(proposedName);
+    } while (this.dbReverse_.has(proposedName) ||
+        this.reservedWords_.has(proposedName));
+    this.dbReverse_.add(proposedName);
     return proposedName;
   }
 
@@ -117,7 +112,7 @@ export default class Names {
    * @param name Potentially illegal entity name.
    * @returns Safe entity name.
    */
-  #safeName(name) {
+  safeName_(name) {
     if (!name) {
       name = 'unnamed';
     } else {
