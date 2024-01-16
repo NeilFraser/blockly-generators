@@ -10,41 +10,41 @@ import Names from '../core/names.mjs';
 const javascriptGenerator = new AbstractGenerator('JavaScript');
 export default javascriptGenerator;
 
-javascriptGenerator.order['ATOMIC'] = 0;            // 0 "" ...
-javascriptGenerator.order['NEW'] = 1.1;             // new
-javascriptGenerator.order['MEMBER'] = 1.2;          // . []
-javascriptGenerator.order['FUNCTION_CALL'] = 2;     // ()
-javascriptGenerator.order['INCREMENT'] = 3;         // ++
-javascriptGenerator.order['DECREMENT'] = 3;         // --
-javascriptGenerator.order['BITWISE_NOT'] = 4.1;     // ~
-javascriptGenerator.order['UNARY_PLUS'] = 4.2;      // +
-javascriptGenerator.order['UNARY_NEGATION'] = 4.3;  // -
-javascriptGenerator.order['LOGICAL_NOT'] = 4.4;     // !
-javascriptGenerator.order['TYPEOF'] = 4.5;          // typeof
-javascriptGenerator.order['VOID'] = 4.6;            // void
-javascriptGenerator.order['DELETE'] = 4.7;          // delete
-javascriptGenerator.order['AWAIT'] = 4.8;           // await
-javascriptGenerator.order['EXPONENTIATION'] = 5.0;  // **
-javascriptGenerator.order['MULTIPLICATION'] = 5.1;  // *
-javascriptGenerator.order['DIVISION'] = 5.2;        // /
-javascriptGenerator.order['MODULUS'] = 5.3;         // %
-javascriptGenerator.order['SUBTRACTION'] = 6.1;     // -
-javascriptGenerator.order['ADDITION'] = 6.2;        // +
-javascriptGenerator.order['BITWISE_SHIFT'] = 7;     // << >> >>>
-javascriptGenerator.order['RELATIONAL'] = 8;        // < <= > >=
-javascriptGenerator.order['IN'] = 8;                // in
-javascriptGenerator.order['INSTANCEOF'] = 8;        // instanceof
-javascriptGenerator.order['EQUALITY'] = 9;          // == != === !==
-javascriptGenerator.order['BITWISE_AND'] = 10;      // &
-javascriptGenerator.order['BITWISE_XOR'] = 11;      // ^
-javascriptGenerator.order['BITWISE_OR'] = 12;       // |
-javascriptGenerator.order['LOGICAL_AND'] = 13;      // &&
-javascriptGenerator.order['LOGICAL_OR'] = 14;       // ||
-javascriptGenerator.order['CONDITIONAL'] = 15;      // ?:
-javascriptGenerator.order['ASSIGNMENT'] = 16;       // = += -= **= *= /= %= <<= >>= ...
-javascriptGenerator.order['YIELD'] = 17;            // yield
-javascriptGenerator.order['COMMA'] = 18;            // ,
-javascriptGenerator.order['NONE'] = 99;             // (...)
+javascriptGenerator.order.ATOMIC = 0;            // 0 "" ...
+javascriptGenerator.order.NEW = 1.1;             // new
+javascriptGenerator.order.MEMBER = 1.2;          // . []
+javascriptGenerator.order.FUNCTION_CALL = 2;     // ()
+javascriptGenerator.order.INCREMENT = 3;         // ++
+javascriptGenerator.order.DECREMENT = 3;         // --
+javascriptGenerator.order.BITWISE_NOT = 4.1;     // ~
+javascriptGenerator.order.UNARY_PLUS = 4.2;      // +
+javascriptGenerator.order.UNARY_NEGATION = 4.3;  // -
+javascriptGenerator.order.LOGICAL_NOT = 4.4;     // !
+javascriptGenerator.order.TYPEOF = 4.5;          // typeof
+javascriptGenerator.order.VOID = 4.6;            // void
+javascriptGenerator.order.DELETE = 4.7;          // delete
+javascriptGenerator.order.AWAIT = 4.8;           // await
+javascriptGenerator.order.EXPONENTIATION = 5.0;  // **
+javascriptGenerator.order.MULTIPLICATION = 5.1;  // *
+javascriptGenerator.order.DIVISION = 5.2;        // /
+javascriptGenerator.order.MODULUS = 5.3;         // %
+javascriptGenerator.order.SUBTRACTION = 6.1;     // -
+javascriptGenerator.order.ADDITION = 6.2;        // +
+javascriptGenerator.order.BITWISE_SHIFT = 7;     // << >> >>>
+javascriptGenerator.order.RELATIONAL = 8;        // < <= > >=
+javascriptGenerator.order.IN = 8;                // in
+javascriptGenerator.order.INSTANCEOF = 8;        // instanceof
+javascriptGenerator.order.EQUALITY = 9;          // == != === !==
+javascriptGenerator.order.BITWISE_AND = 10;      // &
+javascriptGenerator.order.BITWISE_XOR = 11;      // ^
+javascriptGenerator.order.BITWISE_OR = 12;       // |
+javascriptGenerator.order.LOGICAL_AND = 13;      // &&
+javascriptGenerator.order.LOGICAL_OR = 14;       // ||
+javascriptGenerator.order.CONDITIONAL = 15;      // ?:
+javascriptGenerator.order.ASSIGNMENT = 16;       // = += -= **= *= /= %= <<= >>= ...
+javascriptGenerator.order.YIELD = 17;            // yield
+javascriptGenerator.order.COMMA = 18;            // ,
+javascriptGenerator.order.NONE = 99;             // (...)
 
 /**
  * List of outer-inner pairings that do NOT require parentheses.

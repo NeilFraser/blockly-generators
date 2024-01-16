@@ -39,10 +39,10 @@ export default class Names {
     this.dbReverse_ = new Set();
   }
 
-  addKind(name, opt_prefix) {
-    if (this.kinds_.has(name)) throw Error('Existing kind: ' + kind);
-    this.kinds_.set(name, opt_prefix || '');
-    this.db_.set(name, new Map());
+  addKind(kind, opt_prefix) {
+    if (this.kinds_.has(kind)) throw Error('Existing kind: ' + kind);
+    this.kinds_.set(kind, opt_prefix || '');
+    this.db_.set(kind, new Map());
   }
 
   /**
